@@ -1,0 +1,51 @@
+var express = require('express');
+var fs = require('fs');
+var crypto = require('crypto');
+var sys = require('sys')
+var exec = require('child_process').exec;
+var router = express.Router();
+
+var temppath = "./public/temp/";
+
+/* GET home page. */
+router.get('/', function(req, res) {
+  res.render('index', { title: 'Express' });
+});
+
+router.get('/results?', function(req, res) {
+  var id = req.query.id;
+  var sequence = fs.readFileSync(temppath + id + ".sequence");
+  var refseq = fs.readFileSync(temppath + id + ".refseq");
+  var coverage = fs.readFileSync(temppath + id + ".coverageHist.txt");
+  res.render('results', { title: 'Results', sequence: sequence, refseq:refseq, coverage: coverage});
+});
+
+router.post('/calculate-coverage', function(req, res) {
+  var id = crypto.randomBytes(20).toString('hex');  
+  var sequence = req.body.sequence;
+  var sequence = ">" + temppath + id + "\n" + sequence.replace(/ /g,'');
+  var refseq = req.body.refseq;
+  var refseq = ">" + temppath + id + "\n" + refseq.replace(/ /g,'');
+  //display progress here
+  //write to files
+  var sequenceFile = temppath + id + ".sequence";
+  var refseqFile = temppath + id + ".refseq";
+  fs.writeFileSync(sequenceFile, sequence);
+  fs.writeFileSync(refseqFile, refseq);
+  //bamtools coverage script
+  var cmd = 'bash ./scripts/coverage.sh ' + sequenceFile + " " + refseqFile + " " + temppath + id;
+  console.log(cmd);
+    exec(cmd, function(error, stdout, stderr) {
+	console.log('stdout: ' + stdout);
+	console.log('stderr: ' + stderr);
+	if (error !== null) {
+            console.log('exec error: ' + error);
+	}
+    });
+  
+  res.location("results?id="+id);
+  res.redirect("results?id="+id);
+
+});
+
+module.exports = router;
