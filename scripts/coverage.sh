@@ -20,4 +20,4 @@ echoerr "5"
 samtools index $id.aln.sort.bam
 echoerr "6"
 genomeCoverageBed -ibam $id.aln.sort.bam -g $refseq -d > $id.coverageHist.txt
-echo $refseq
+awk 'BEGIN {count=0} $3 != 0 {count += 1} END {print (count/NR)*100}' $id.coverageHist.txt > $id.coverage.txt

@@ -14,19 +14,27 @@ router.get('/', function(req, res) {
 
 router.get('/results?', function(req, res) {
   var id = req.query.id;
-  var sequence = fs.readFileSync(temppath + id + ".sequence");
-  var refseq = fs.readFileSync(temppath + id + ".refseq");
-  var coverage = fs.readFileSync(temppath + id + ".coverageHist.txt");
-  res.render('results', { title: 'Results', sequence: sequence, refseq:refseq, coverage: coverage});
+    fs.readFile(temppath + id + ".sequence", "utf8", function(err, sequence) {
+	fs.readFile(temppath + id + ".refseq", "utf8", function(err, refseq) {
+	    fs.readFile(temppath + id + ".coverage.txt", "utf8", function(err, coverage) {
+		res.render('results', { title: 'Results', sequence: sequence, refseq:refseq, coverage: coverage});
+	    });
+	});
+    });
 });
 
 router.post('/calculate-coverage', function(req, res) {
   var id = crypto.randomBytes(20).toString('hex');  
+  console.log(req.body.sequence);
   var sequence = req.body.sequence;
-  var sequence = ">" + temppath + id + "\n" + sequence.replace(/ /g,'');
+  if (!(/^>/).test(sequence)) {
+      var sequence = ">" + temppath + id + "\n" + sequence.replace(/ /g,'');
+  }
   var refseq = req.body.refseq;
-  var refseq = ">" + temppath + id + "\n" + refseq.replace(/ /g,'');
-  //display progress here
+  if (!(/^>/).test(refseq)) {
+      var refseq = ">" + temppath + id + "\n" + refseq.replace(/ /g,'');
+  }  
+//display progress here
   //write to files
   var sequenceFile = temppath + id + ".sequence";
   var refseqFile = temppath + id + ".refseq";
@@ -41,10 +49,10 @@ router.post('/calculate-coverage', function(req, res) {
 	if (error !== null) {
             console.log('exec error: ' + error);
 	}
+	res.redirect("results?id="+id);
     });
   
-  res.location("results?id="+id);
-  res.redirect("results?id="+id);
+
 
 });
 

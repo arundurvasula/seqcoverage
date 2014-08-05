@@ -2,7 +2,10 @@ extends layout
 
 block content
   h1= title
+  .chart
+  script(src="http://d3js.org/d3.v3.min.js")
   p Welcome to #{title}
   p Sequence: #{sequence}
   p Refseq: #{refseq}
   p Coverage: #{coverage}
+  
