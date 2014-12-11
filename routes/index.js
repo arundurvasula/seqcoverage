@@ -9,18 +9,23 @@ var temppath = "./public/temp/";
 
 /* GET home page. */
 router.get('/', function(req, res) {
-  res.render('index', { title: 'Express' });
+  res.render('index', { title: 'Sequence Coverage' });
 });
 
 router.get('/results?', function(req, res) {
   var id = req.query.id;
+  if(id === 'demo') {
+      fs.readFile("./public/demo/coverage.txt", "utf8", function (err, coverage){ 
+	  res.render('results', {title: 'Results', coverage:coverage, id:id});
+      })} else {
     fs.readFile(temppath + id + ".sequence", "utf8", function(err, sequence) {
 	fs.readFile(temppath + id + ".refseq", "utf8", function(err, refseq) {
 	    fs.readFile(temppath + id + ".coverage.txt", "utf8", function(err, coverage) {
-		res.render('results', { title: 'Results', sequence: sequence, refseq:refseq, coverage: coverage});
+		res.render('results', { title: 'Results', sequence: sequence, refseq:refseq, coverage: coverage, id:id});
 	    });
 	});
     });
+}
 });
 
 router.post('/calculate-coverage', function(req, res) {

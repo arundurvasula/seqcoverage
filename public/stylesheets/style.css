@@ -1,9 +1,27 @@
+.chart div {
+  font: 10px sans-serif;
+  background-color: steelblue;
+  color: grey;
+}
 
-
+div.bar {
+	display: inline-block;
+	width: 1px;
+	height: 75px;/* Gets overriden by D3-assigned height below */
+	background-color: teal;
+}
+.fa-question-circle {
+    color: #FF851B;
+}
+div.info {
+    max-width: 500px;
+    text-align: center;
+    margin: 0 auto;
+}
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  background-color: #B10DC9;
+  background: #F0F0F0 !important;
 }
 
 a {

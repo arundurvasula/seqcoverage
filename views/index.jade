@@ -1,9 +1,19 @@
 extends layout
 
 block content
-  form(method="POST", action="/calculate-coverage")
-    textarea(name="sequence")
-    textarea(name="refseq")
-    //input(type="textarea", name="sequence")
-    //input(type="textarea", name="refseq")
-    input(type="submit")
+  h1.text-primary Sequence Coverage
+  p.lead.text-info Calculate coverage of a reference using reads or contigs.
+  form.form-horizontal(method="POST", action="/calculate-coverage")
+    //-#p.text-center
+    h3 Sequences	
+    p Please enter your sequences in FASTA format.
+    textarea.form-control(name="sequence", rows=7, placeholder=">Contig 1")
+    h3 Reference Sequence
+    p Please enter your reference sequence in FASTA format.
+    textarea.form-control(name="refseq", rows=7, placeholder=">Refseq")
+    p
+    input.btn.btn-primary.btn-lg(type="submit")
+    p.text-center 
+      i.fa.fa-question-circle.fa-5x 
+  div.info
+    p.lead.text-info This website uses <a href="http://bio-bwa.sourceforge.net">bwa v0.7.5a-r405</a> and <a href="http://samtools.sourceforge.net">samtools v0.1.19-96b5f2294a</a> to map sequences to a reference. It uses <a href="http://bedtools.readthedocs.org/en/latest/">bedtools v2.17.0</a> to generate a histogram, and <a href="http://www.r-project.org">R v3.0.2</a> with <a href="http://cran.r-project.org/web/packages/ggplot2/index.html">ggplot2 v1.0.0</a> to graph it. This server is hosted by <a href="https://www.digitalocean.com">Digital Ocean</a>. Created by <a href="http://twitter.com/arundurvasula">@arundurvasula</a>.

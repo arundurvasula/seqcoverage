@@ -8,11 +8,15 @@
   "dependencies": {
     "body-parser": "~1.0.0",
     "cookie-parser": "~1.0.1",
-    "crypto": "0.0.3",
+    "crypto":"0.0.3",
     "debug": "~0.7.4",
     "express": "~4.2.0",
     "jade": "~1.3.0",
+    "json": "^9.0.1",
     "morgan": "~1.0.0",
     "static-favicon": "~1.0.0"
+  },
+  "devDependencies": {
+    "json": "^9.0.1"
   }
 }

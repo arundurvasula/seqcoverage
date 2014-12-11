@@ -1,0 +1,9 @@
+#!/usr/bin/Rscript
+library("ggplot2")
+data <- read.table(file("stdin"))
+ca <- commandArgs(trailingOnly=TRUE)
+png(file=ca[1])
+df <- data.frame(Coverage=c(1:length(data$V3)),Position=data$V3)
+ggplot(df, aes(x=Position, y=Coverage)) + geom_bar(stat="identity")
+#barplot(data[[3]])
+dev.off()

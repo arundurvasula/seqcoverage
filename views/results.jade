@@ -2,10 +2,39 @@ extends layout
 
 block content
   h1= title
-  .chart
+  #p.text-center
+    p.lead Coverage: #{coverage}%
+    img(src="temp/#{id}.plot.png")
+  //-.chart
   script(src="http://d3js.org/d3.v3.min.js")
-  p Welcome to #{title}
-  p Sequence: #{sequence}
-  p Refseq: #{refseq}
-  p Coverage: #{coverage}
-  
+  script(type='text/javascript').
+    var id =!{JSON.stringify(id)};
+    var file="temp/"+id+".coverageHist.txt";
+    var dataset = [];
+    var width = 500,
+      barHeight = 2;
+    var x = d3.scale.linear()
+      .domain([0, width]);
+    var chart = d3.select(".chart")
+      .attr("width", width);
+
+    d3.tsv(file, function(error, data) {
+      x.range([0, d3.max(data, function(d) { return d.value; })]);
+      chart.attr("height", barHeight * data.length);
+
+      data.forEach(function(d) {
+        dataset.push(d[0]);
+      })
+      
+      var bar = d3.select(".chart").selectAll("div")
+        .data(dataset)
+        .enter()
+        .append("div")
+        .attr("width", 500)
+        //.attr("height, 300)
+        .attr("class", "bar")
+        .style("height", function(d) {
+          var barHeight = (d+1) * 2;
+          return barHeight + "px";
+        });
+    });

@@ -1,0 +1,20 @@
+function getQueryVariable(variable)
+{
+    var query = window.location.search.substring(1);
+    var vars = query.split("&");
+    for (var i=0;i<vars.length;i++){
+        var pair = vars[i].split("=");
+        if(pair[0] == variable){
+	    return pair[1];
+	}
+    }
+    return(false);
+}
+var file = "./public/temp/" + getQueryVariable("id") + ".coverage.Hist.txt";
+d3.tsv(file, function(error, data) {
+    data.forEach(function(d) {
+        d.position = d[1];
+        d.bases = d[2];
+    });
+});
+console.log(d);
